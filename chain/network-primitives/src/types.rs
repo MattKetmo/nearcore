@@ -10,6 +10,7 @@
 /// - We also export publicly types from `crate::network_protocol`
 use actix::dev::{MessageResponse, ResponseChannel};
 use actix::{Actor, Message};
+use anyhow::{bail, Result};
 use borsh::{BorshDeserialize, BorshSerialize};
 use chrono::DateTime;
 use near_crypto::{SecretKey, Signature};
