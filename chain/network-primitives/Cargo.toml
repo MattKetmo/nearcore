@@ -1,10 +1,7 @@
 [package]
 name = "near-network-primitives"
 version = "0.0.0"
-authors = [
-    "Near Inc <hello@nearprotocol.com>",
-    "Piotr Mikulski <piotr@near.org>"
-]
+authors = ["Near Inc <hello@nearprotocol.com>"]
 edition = "2021"
 # Please update rust-toolchain.toml as well when changing version here:
 rust-version = "1.56.0"
@@ -18,14 +15,15 @@ actix = "=0.11.0-beta.2"
 borsh = "0.9"
 chrono = { version = "0.4.4", features = ["serde"] }
 deepsize = { version = "0.2.0", optional = true }
-near-crypto = { path = "../../core/crypto" }
-near-primitives = { path = "../../core/primitives" }
-serde = { version = "1", features = ["derive", "rc", "alloc"], optional=true }
+serde = { version = "1", features = ["alloc", "derive", "rc"], optional = true }
 strum = { version = "0.20", features = ["derive"] }
 tokio = { version = "1.1", features = ["net", "rt-multi-thread"] }
 tracing = "0.1.13"
 
+near-crypto = { path = "../../core/crypto" }
+near-primitives = { path = "../../core/primitives" }
+
 [features]
-test_features = ["serde"]
-sandbox = []
 deepsize_feature = ["deepsize", "near-primitives/deepsize_feature"]
+sandbox = []
+test_features = ["serde"]

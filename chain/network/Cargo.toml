@@ -1,10 +1,7 @@
 [package]
 name = "near-network"
 version = "0.0.0"
-authors = [
-    "Near Inc <hello@nearprotocol.com>",
-    "Piotr Mikulski <piotr@near.org>"
-]
+authors = ["Near Inc <hello@nearprotocol.com>"]
 edition = "2021"
 # Please update rust-toolchain.toml as well when changing version here:
 rust-version = "1.56.0"
@@ -49,11 +46,17 @@ deepsize_feature = [
     "deepsize",
     "near-crypto/deepsize_feature",
     "near-network-primitives/deepsize_feature",
-    "near-primitives/deepsize_feature"
+    "near-primitives/deepsize_feature",
 ]
 delay_detector = ["delay-detector"]
-performance_stats = ["near-performance-metrics/performance_stats", "near-rust-allocator-proxy"]
-protocol_feature_routing_exchange_algorithm = ["near-primitives/protocol_feature_routing_exchange_algorithm", "near-stable-hasher"]
+performance_stats = [
+    "near-performance-metrics/performance_stats",
+    "near-rust-allocator-proxy",
+]
+protocol_feature_routing_exchange_algorithm = [
+    "near-primitives/protocol_feature_routing_exchange_algorithm",
+    "near-stable-hasher",
+]
 sandbox = ["near-network-primitives/sandbox"]
 test_features = ["near-network-primitives/test_features", "serde"]
 
