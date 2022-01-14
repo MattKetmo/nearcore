@@ -200,10 +200,18 @@ impl Actor for PeerManagerActor {
             debug!(target: "network", at = ?server_addr, "starting public server");
             let peer_manager_addr = ctx.address();
 
-            async move {
-                let listener = TcpListener::bind(server_addr).await;
-                let listener = match listener {
-                    Ok(listener) => listener,
+            actix::spawn(async move {
+                match TcpListener::bind(server_addr).await {
+                    Ok(listener) => loop {
+                        if let Ok((conn, client_addr)) = listener.accept().await {
+                            peer_manager_addr.do_send(
+                                PeerManagerMessageRequest::InboundTcpConnect(
+                                    InboundTcpConnect::new(conn),
+                                ),
+                            );
+                            debug!(target: "network", from = ?client_addr, "got new connection");
+                        }
+                    },
                     Err(e) => {
                         panic!(
                             "failed to start listening on server_addr={:?} e={:?}",
@@ -211,18 +219,7 @@ impl Actor for PeerManagerActor {
                         );
                     }
                 };
-
-                loop {
-                    if let Ok((conn, client_addr)) = listener.accept().await {
-                        peer_manager_addr.do_send(PeerManagerMessageRequest::InboundTcpConnect(
-                            InboundTcpConnect::new(conn),
-                        ));
-                        debug!(target: "network", from = ?client_addr, "got new connection");
-                    }
-                }
-            }
-            .into_actor(self)
-            .spawn(ctx);
+            });
         }
 
         // Periodically push network information to client.
