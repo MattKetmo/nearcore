@@ -5,7 +5,7 @@ use std::sync::Arc;
 use actix::{Actor, Addr, Arbiter};
 use actix_rt::ArbiterHandle;
 use actix_web;
-use anyhow::{Context, Result};
+use anyhow::Context;
 #[cfg(feature = "performance_stats")]
 use near_rust_allocator_proxy::allocator::reset_memory_usage_max;
 use tracing::{error, info, trace};
@@ -296,7 +296,7 @@ pub struct NearNode {
     pub rpc_servers: Vec<(&'static str, actix_web::dev::Server)>,
 }
 
-pub fn start_with_config(home_dir: &Path, config: NearConfig) -> Result<NearNode> {
+pub fn start_with_config(home_dir: &Path, config: NearConfig) -> Result<NearNode, anyhow::Error> {
     let store = init_and_migrate_store(home_dir, &config);
 
     let runtime = Arc::new(NightshadeRuntime::with_config(
