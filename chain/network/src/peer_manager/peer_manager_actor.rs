@@ -1389,7 +1389,7 @@ impl PeerManagerActor {
                    to = ?peer_id,
                    num_connected_peers = connected_peers.len(),
                    ?message,
-                   "Sending message"
+                   "Failed sending message"
             );
             false
         }
