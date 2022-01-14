@@ -3158,9 +3158,9 @@ dependencies = [
 
 [[package]]
 name = "near-rust-allocator-proxy"
-version = "0.3.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02f7efdf6d23964df1003d7784e3c2d99302f28eeeb19e1c19db75a0f886c358"
+checksum = "470bf2fd9a0ae77d00aac91c087aa7b88c4b4522fe9e6d997d438999838c3b33"
 dependencies = [
  "backtrace",
  "libc",
