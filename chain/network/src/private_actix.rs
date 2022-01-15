@@ -2,8 +2,8 @@
 /// They are not meant to be used outside.
 use crate::network_protocol::PeerMessage;
 use crate::peer::peer_actor::PeerActor;
-use actix::dev::{MessageResponse, ResponseChannel};
-use actix::{Actor, Addr, Message};
+use actix::dev::MessageResponse;
+use actix::{Addr, Message};
 use conqueue::QueueSender;
 use near_network_primitives::types::{
     Edge, PartialEdgeInfo, PeerChainInfoV2, PeerInfo, PeerType, SimpleEdge,
@@ -19,7 +19,8 @@ use std::sync::{Arc, Mutex};
 /// Actor message which asks `PeerManagerActor` to register peer.
 /// Returns `RegisterPeerResult` with `Accepted` if connection should be kept
 /// or a reject response otherwise.
-#[derive(Clone, Debug)]
+#[derive(Message, Clone, Debug)]
+#[rtype(result = "RegisterPeerResponse")]
 pub struct RegisterPeer {
     pub(crate) actor: Addr<PeerActor>,
     pub(crate) peer_info: PeerInfo,
@@ -50,10 +51,6 @@ impl deepsize::DeepSizeOf for RegisterPeer {
     }
 }
 
-impl Message for RegisterPeer {
-    type Result = RegisterPeerResponse;
-}
-
 #[derive(MessageResponse, Debug)]
 pub enum RegisterPeerResponse {
     Accept(Option<PartialEdgeInfo>),
@@ -73,28 +70,13 @@ pub struct Unregister {
 
 /// Requesting peers from peer manager to communicate to a peer.
 #[cfg_attr(feature = "deepsize_feature", derive(deepsize::DeepSizeOf))]
-#[derive(Clone, Debug)]
+#[derive(Message, Clone, Debug)]
+#[rtype(result = "PeerRequestResult")]
 pub struct PeersRequest {}
 
-impl Message for PeersRequest {
-    type Result = PeerRequestResult;
-}
-
-#[derive(Debug)]
+#[derive(MessageResponse, Debug)]
 pub struct PeerRequestResult {
     pub peers: Vec<PeerInfo>,
-}
-
-impl<A, M> MessageResponse<A, M> for PeerRequestResult
-where
-    A: Actor,
-    M: Message<Result = PeerRequestResult>,
-{
-    fn handle<R: ResponseChannel<M>>(self, _: &mut A::Context, tx: Option<R>) {
-        if let Some(tx) = tx {
-            tx.send(self)
-        }
-    }
 }
 
 #[derive(Message)]
@@ -135,14 +117,10 @@ pub struct GetPeerIdResult {
     pub(crate) peer_id: PeerId,
 }
 
-impl Debug for ValidateEdgeList {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        f.debug_struct("source_peer_id").finish()
-    }
-}
-
 /// List of `Edges`, which we received from `source_peer_id` gor purpose of validation.
 /// Those are list of edges received through `NetworkRequests::Sync` or `NetworkRequests::IbfMessage`.
+#[derive(Message)]
+#[rtype(result = "bool")]
 pub struct ValidateEdgeList {
     /// The list of edges is provided by `source_peer_id`, that peer will be banned
     ///if any of these edges are invalid.
@@ -163,8 +141,10 @@ pub struct ValidateEdgeList {
     pub(crate) adv_disable_edge_signature_verification: bool,
 }
 
-impl Message for ValidateEdgeList {
-    type Result = bool;
+impl Debug for ValidateEdgeList {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("source_peer_id").finish()
+    }
 }
 
 #[derive(MessageResponse, Debug)]
