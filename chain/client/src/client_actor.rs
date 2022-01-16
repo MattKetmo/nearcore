@@ -698,7 +698,7 @@ impl Handler<GetNetworkInfo> for ClientActor {
         Ok(NetworkInfoResponse {
             connected_peers: (self.network_info.connected_peers.iter())
                 .map(|a| a.peer_info.clone())
-                .collect::<Vec<_>>(),
+                .collect(),
             num_connected_peers: self.network_info.num_connected_peers,
             peer_max_count: self.network_info.peer_max_count,
             sent_bytes_per_sec: self.network_info.sent_bytes_per_sec,
