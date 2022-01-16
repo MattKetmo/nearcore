@@ -97,7 +97,7 @@ fn perf_internal(_attr: TokenStream, item: TokenStream, debug: bool) -> TokenStr
             let b: TokenStream = quote! {
                 fn xxx() {
                     use near_performance_metrics::stats::measure_performance;
-                    near_performance_metrics::stats::measure_performance(std::any::type_name::<Self>(), msg, move |msg| {
+                    near_performance_metrics::stats::measure_performance(std::any::type_name::<Self>(), (), move |_| {
                         #function_body
                     })
                 }

@@ -2059,7 +2059,7 @@ impl PeerManagerActor {
     #[perf]
     fn handle_msg_get_peer_id(
         &mut self,
-        msg: crate::private_actix::GetPeerId,
+        _msg: crate::private_actix::GetPeerId,
         _ctx: &mut Context<Self>,
     ) -> crate::private_actix::GetPeerIdResult {
         crate::private_actix::GetPeerIdResult { peer_id: self.my_peer_id.clone() }
@@ -2227,7 +2227,7 @@ impl PeerManagerActor {
     #[perf]
     fn handle_msg_peers_request(
         &mut self,
-        msg: PeersRequest,
+        _msg: PeersRequest,
         _ctx: &mut Context<Self>,
     ) -> PeerRequestResult {
         #[cfg(feature = "delay_detector")]
