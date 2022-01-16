@@ -106,6 +106,7 @@ impl RoutingTableView {
                     // max nonce - threshold.
                     self.route_nonce.put(
                         next_hop.clone(),
+                        // TODO, should be max(min_v + 1, max_v.saturating_sub(ROUND_ROBIN_MAX_NONCE_DIFFERENCE_ALLOWED))
                         std::cmp::max(
                             min_v,
                             max_v.saturating_sub(ROUND_ROBIN_MAX_NONCE_DIFFERENCE_ALLOWED),
