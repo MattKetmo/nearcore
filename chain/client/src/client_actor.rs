@@ -669,7 +669,7 @@ impl Handler<Status> for ClientActor {
             protocol_version,
             latest_protocol_version: PROTOCOL_VERSION,
             chain_id: self.client.config.chain_id.clone(),
-            rpc_addr: self.client.config.rpc_addr.as_ref().map(|addr| addr.clone()),
+            rpc_addr: self.client.config.rpc_addr.clone(),
             validators,
             sync_info: StatusSyncInfo {
                 latest_block_hash: head.last_block_hash.into(),
@@ -696,12 +696,8 @@ impl Handler<GetNetworkInfo> for ClientActor {
         self.check_triggers(ctx);
 
         Ok(NetworkInfoResponse {
-            connected_peers: self
-                .network_info
-                .connected_peers
-                .clone()
-                .into_iter()
-                .map(|a| a.peer_info)
+            connected_peers: (self.network_info.connected_peers.iter())
+                .map(|a| a.peer_info.clone())
                 .collect::<Vec<_>>(),
             num_connected_peers: self.network_info.num_connected_peers,
             peer_max_count: self.network_info.peer_max_count,
